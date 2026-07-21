@@ -123,17 +123,20 @@ tasks.register('package', Zip) {
     archiveFileName.set('Southside.zip')
 }
 
-tasks.register("downgradeJar", DowngradeJarTask) {
-    input = tasks.jar.archiveFile.get().asFile
-    outputSuffix = "-downgrade"
-    compileClassPath = sourceSets.main.compileClasspath
-}.get().dependsOn("build")
+// 注释掉 downgradeJar 任务，因为 license-emulator 子项目缺失
+// tasks.register("downgradeJar", DowngradeJarTask) {
+//     input = tasks.jar.archiveFile.get().asFile
+//     outputSuffix = "-downgrade"
+//     compileClassPath = sourceSets.main.compileClasspath
+// }.get().dependsOn("build")
 
 tasks.register('downgradePackage', Zip) {
-    dependsOn downgradeJar
+    // 不再依赖 downgradeJar
+    // dependsOn downgradeJar
+    dependsOn jar
     from ('build/libs/') {
-        include 'Southside-1.0-SNAPSHOT-downgrade.jar'
-        rename  'Southside-1.0-SNAPSHOT-downgrade.jar', 'Southside.jar'
+        include 'Southside-1.0-SNAPSHOT.jar'
+        rename  'Southside-1.0-SNAPSHOT.jar', 'Southside.jar'
         into 'Southside'
     }
     from ('package-files/') {
